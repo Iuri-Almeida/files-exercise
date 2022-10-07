@@ -36,16 +36,18 @@ public class Main {
         participants.forEach(participant -> {
             LocalDateTime localDateTime = participant.getDate();
 
+            String name = participant.getName();
+            String zone = participant.getZone();
+            String timeZone = String.valueOf(signService.timeZone(localDateTime, participant.getZone()));
             int age = signService.getAge(localDateTime);
             boolean isLeapYear = signService.isLeapYear(localDateTime);
             String formattedDate = signService.format(localDateTime);
-            String timeZone = String.valueOf(signService.timeZone(localDateTime, participant.getZone()));
             Sign sign = new SignFactory().create(MonthDay.of(localDateTime.getMonth(), localDateTime.getDayOfMonth()));
             String risingSign = sign.getRisingSign(localDateTime.toLocalTime());
 
             Path participantFile = Path.of(USER_DIR, "files", participant.getName().replaceAll(" ", "_") + ".txt");
-            String info = "Name: " + participant.getName() + "\n" +
-                    "Zone: " + participant.getZone() + "\n" +
+            String info = "Name: " + name + "\n" +
+                    "Zone: " + zone + "\n" +
                     "TimeZone: " + timeZone + "\n" +
                     "Age: " + age + "\n" +
                     "Leap Year: " + isLeapYear + "\n" +
