@@ -11,6 +11,8 @@ import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Main {
 
@@ -27,13 +29,11 @@ public class Main {
         fileService.write(groupFile, participantService.findAll());
 
         List<String> fileRead = fileService.readLines(groupFile);
-        fileRead.forEach(s -> {
+        fileRead.parallelStream().forEach(s -> {
             List<String> list = Arrays.asList(s.split(";"));
-            participantService.saveParticipant(new Participant(list.get(0), list.get(1), LocalDateTime.parse(list.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
-        });
 
-        List<Participant> participants = participantService.getParticipants();
-        participants.forEach(participant -> {
+            Participant participant = new Participant(list.get(0), list.get(1), LocalDateTime.parse(list.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+
             LocalDateTime localDateTime = participant.getDate();
 
             String name = participant.getName();
